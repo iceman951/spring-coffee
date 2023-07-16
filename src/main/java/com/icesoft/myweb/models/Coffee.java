@@ -28,6 +28,10 @@ public class Coffee {
 
     }
 
+    public String info() {
+        return "Coffee [id=" + id + ", name=" + name + "]";
+    }
+
     public String getId() {
         return id;
     }

@@ -1,10 +1,11 @@
 package com.icesoft.myweb.controllers;
-import java.util.List;
+
 import java.util.Optional;
 
 import com.icesoft.myweb.models.Coffee;
-// import com.icesoft.myweb.models.CoffeeRepository;
 import com.icesoft.myweb.models.CoffeeRepository;
+
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
+@Log4j2
 @RequestMapping("/coffees")
 public class CoffeeController {
     private final CoffeeRepository coffeeRepository;
@@ -27,31 +29,34 @@ public class CoffeeController {
         this.coffeeRepository = coffeeRepository;
 
         // this.coffeeRepository.saveAll(List.of(
-        //     new Coffee("Café Ganador"),
-        //     new Coffee("Café Lareño"),
-        //     new Coffee("Café Três Pontas")
+        // new Coffee("Café Ganador"),
+        // new Coffee("Café Lareño"),
+        // new Coffee("Café Três Pontas")
         // ));
 
         // this.coffeeRepository.addAll(List.of(
-        //     new Coffee("Café Ganador"),
-        //     new Coffee("Café Lareño"),
-        //     new Coffee("Café Três Pontas")
+        // new Coffee("Café Ganador"),
+        // new Coffee("Café Lareño"),
+        // new Coffee("Café Três Pontas")
         // ));
     }
 
     @GetMapping("")
     Iterable<Coffee> getCoffees() {
+        log.info("Getting all coffees");
         return this.coffeeRepository.findAll();
     }
 
     @GetMapping("/{id}")
     Optional<Coffee> getCoffeeById(@PathVariable String id) {
+        log.info("Getting coffee by id");
         return this.coffeeRepository.findById(id);
+
     }
 
     @GetMapping("/name/{name}")
     Optional<Coffee> getCoffeeByName(@PathVariable String name) {
-        
+
         for (Coffee c : this.coffeeRepository.findAll()) {
             if (c.getName().equals(name)) {
                 return Optional.of(c);
@@ -61,17 +66,18 @@ public class CoffeeController {
         return Optional.empty();
     }
 
-    @PostMapping("")
+    @PostMapping
     Coffee postCoffee(@RequestBody Coffee coffee) {
         this.coffeeRepository.save(coffee);
+        log.trace("[POST] create new coffee" + coffee.info());
         return coffee;
     }
 
     @PutMapping("/{id}")
     ResponseEntity<Coffee> putCoffee(@PathVariable String id, @RequestBody Coffee coffee) {
-        return (!this.coffeeRepository.existsById(id)) ?
-            new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED) :
-            new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK);
+        return (!this.coffeeRepository.existsById(id))
+                ? new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED)
+                : new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
