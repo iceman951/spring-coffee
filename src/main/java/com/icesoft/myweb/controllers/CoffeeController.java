@@ -1,9 +1,11 @@
 package com.icesoft.myweb.controllers;
 
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.icesoft.myweb.models.Coffee;
-import com.icesoft.myweb.models.CoffeeRepository;
+import com.icesoft.myweb.repositories.CoffeeRepository;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @Log4j2
@@ -39,6 +42,13 @@ public class CoffeeController {
         // new Coffee("Café Lareño"),
         // new Coffee("Café Três Pontas")
         // ));
+    }
+
+    @GetMapping("/search")
+    Optional<Coffee> getCoffeeBySearch(@RequestParam String name) {
+        // Stream<Coffee> = this.coffeeRepository.findCoffeeByname(name);
+        return StreamSupport.stream(coffeeRepository.findAll().spliterator(), false).
+        filter(coffee -> coffee.getName().equals(name)).findFirst();
     }
 
     @GetMapping("")
