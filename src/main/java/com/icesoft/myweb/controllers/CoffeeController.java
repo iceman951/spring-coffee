@@ -26,11 +26,11 @@ public class CoffeeController {
 
         this.coffeeRepository = coffeeRepository;
 
-        this.coffeeRepository.saveAll(List.of(
-            new Coffee("Café Ganador"),
-            new Coffee("Café Lareño"),
-            new Coffee("Café Três Pontas")
-        ));
+        // this.coffeeRepository.saveAll(List.of(
+        //     new Coffee("Café Ganador"),
+        //     new Coffee("Café Lareño"),
+        //     new Coffee("Café Três Pontas")
+        // ));
 
         // this.coffeeRepository.addAll(List.of(
         //     new Coffee("Café Ganador"),
@@ -80,4 +80,9 @@ public class CoffeeController {
         return new ResponseEntity<>("Coffee deleted successfully", HttpStatus.OK);
     }
 
+    @DeleteMapping("allMembers")
+    ResponseEntity<String> deleteAllCoffees() {
+        this.coffeeRepository.deleteAll();
+        return new ResponseEntity<>("All coffees deleted successfully", HttpStatus.OK);
+    }
 }
